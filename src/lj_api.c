@@ -142,6 +142,15 @@ LUA_API const lua_Number *lua_version(lua_State *L)
 
 /* -- Stack manipulation -------------------------------------------------- */
 
+/*
+** convert an acceptable stack index into an absolute index
+*/
+LUA_API int lua_absindex(lua_State *L, int idx) {
+  return (idx > 0 || ispseudo(idx))
+         ? idx
+         : cast_int(L->top - L->base + idx);
+}
+
 LUA_API int lua_gettop(lua_State *L)
 {
   return (int)(L->top - L->base);
@@ -197,6 +206,14 @@ static void copy_slot(lua_State *L, TValue *f, int idx)
     if (idx < LUA_GLOBALSINDEX)  /* Need a barrier for upvalues. */
       lj_gc_barrier(L, curr_func(L), f);
   }
+}
+
+LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
+  TValue *fr;
+  lua_lock(L);
+  fr = index2addr(L, fromidx);
+  moveto(L, fr, toidx);
+  lua_unlock(L);
 }
 
 LUA_API void lua_replace(lua_State *L, int idx)
