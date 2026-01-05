@@ -14,6 +14,8 @@
 #include "lj_err.h"
 #include "lj_tab.h"
 
+#include <math.h>
+
 /* -- Object hashing ------------------------------------------------------ */
 
 /* Hash an arbitrary key and return its anchor position in the hash table. */
