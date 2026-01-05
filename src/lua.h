@@ -136,6 +136,8 @@ LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
 */
 
 LUA_API int             (lua_isnumber) (lua_State *L, int idx);
+LUA_API int             (lua_ispurearray)(lua_State *L, int idx);
+LUA_API int             (lua_ispuremap)(lua_State *L, int idx);
 LUA_API int             (lua_isstring) (lua_State *L, int idx);
 LUA_API int             (lua_iscfunction) (lua_State *L, int idx);
 LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
@@ -151,6 +153,8 @@ LUA_API lua_Integer     (lua_tointeger) (lua_State *L, int idx);
 LUA_API int             (lua_toboolean) (lua_State *L, int idx);
 LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
 LUA_API size_t          (lua_objlen) (lua_State *L, int idx);
+LUA_API size_t          (lua_arraylen) (lua_State *L, int idx);
+LUA_API size_t          (lua_maplen) (lua_State *L, int idx);
 LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
 LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
 LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);

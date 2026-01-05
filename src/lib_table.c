@@ -169,6 +169,46 @@ LJLIB_CF(table_concat)		LJLIB_REC(.)
   return 1;
 }
 
+LJLIB_NOREG LJLIB_CF(table_isarray) LJLIB_REC(.)
+{
+  GCtab *src = lj_lib_checktab(L, 1);
+
+  setboolV(L->base, lj_tab_isarray(src));
+  L->top = L->base+1;
+
+  return 1;
+}
+
+LJLIB_NOREG LJLIB_CF(table_ismap) LJLIB_REC(.)
+{
+  GCtab *src = lj_lib_checktab(L, 1);
+
+  setboolV(L->base, lj_tab_ismap(src));
+  L->top = L->base+1;
+
+  return 1;
+}
+
+LJLIB_NOREG LJLIB_CF(table_isempty) LJLIB_REC(.)
+{
+  GCtab *src = lj_lib_checktab(L, 1);
+
+  setboolV(L->base, lj_tab_isempty(src));
+  L->top = L->base+1;
+
+  return 1;
+}
+
+LJLIB_NOREG LJLIB_CF(table_length) LJLIB_REC(.)
+{
+  GCtab *src = lj_lib_checktab(L, 1);
+
+  setintV(L->base, lj_tab_keycount(src));
+  L->top = L->base+1;
+
+  return 1;
+}
+
 /* ------------------------------------------------------------------------ */
 
 static void set2(lua_State *L, int i, int j)
@@ -304,6 +344,22 @@ static int luaopen_table_new(lua_State *L)
   return lj_lib_postreg(L, lj_cf_table_new, FF_table_new, "new");
 }
 
+static int luaopen_table_isarray(lua_State *L) {
+  return lj_lib_postreg(L, lj_cf_table_isarray, FF_table_isarray, "isarray");
+}
+
+static int luaopen_table_ismap(lua_State *L) {
+  return lj_lib_postreg(L, lj_cf_table_ismap, FF_table_ismap, "ismap");
+}
+
+static int luaopen_table_isempty(lua_State *L) {
+  return lj_lib_postreg(L, lj_cf_table_isempty, FF_table_isempty, "isempty");
+}
+
+static int luaopen_table_length(lua_State *L) {
+  return lj_lib_postreg(L, lj_cf_table_length, FF_table_length, "length");
+}
+
 static int luaopen_table_clear(lua_State *L)
 {
   return lj_lib_postreg(L, lj_cf_table_clear, FF_table_clear, "clear");
@@ -321,6 +377,10 @@ LUALIB_API int luaopen_table(lua_State *L)
   lua_setfield(L, -2, "unpack");
 #endif
   lj_lib_prereg(L, LUA_TABLIBNAME ".new", luaopen_table_new, tabV(L->top-1));
+  lj_lib_prereg(L, LUA_TABLIBNAME ".isarray", luaopen_table_isarray, tabV(L->top-1));
+  lj_lib_prereg(L, LUA_TABLIBNAME ".ismap", luaopen_table_ismap, tabV(L->top-1));
+  lj_lib_prereg(L, LUA_TABLIBNAME ".isempty", luaopen_table_isempty, tabV(L->top-1));
+  lj_lib_prereg(L, LUA_TABLIBNAME ".length", luaopen_table_length, tabV(L->top-1));
   lj_lib_prereg(L, LUA_TABLIBNAME ".clear", luaopen_table_clear, tabV(L->top-1));
   return 1;
 }

@@ -597,6 +597,26 @@ LUA_API size_t lua_objlen(lua_State *L, int idx)
   }
 }
 
+LUA_API size_t lua_arraylen(lua_State *L, int idx) 
+{
+  TValue *o = index2adr(L, idx);
+  if (tvistab(o)) {
+    return (size_t)lj_tab_len(tabV(o));
+  } else {
+    return 0;
+  }
+}
+
+LUA_API size_t lua_maplen(lua_State *L, int idx) 
+{
+  TValue *o = index2adr(L, idx);
+  if (tvistab(o)) {
+    return (size_t)lj_tab_len(tabV(o));
+  } else {
+    return 0;
+  }
+}
+
 LUA_API lua_CFunction lua_tocfunction(lua_State *L, int idx)
 {
   cTValue *o = index2adr(L, idx);

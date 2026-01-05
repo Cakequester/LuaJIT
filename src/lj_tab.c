@@ -683,5 +683,110 @@ MSize LJ_FASTCALL lj_tab_len_hint(GCtab *t, size_t hint)
   }
   return lj_tab_len(t);
 }
+
+int LJ_FASTCALL lj_tab_isarray(const GCtab *src)
+{
+  MSize len = lj_tab_len(src);
+  Node *node;
+  cTValue *o;
+  ptrdiff_t i;
+
+  node = noderef(src->node);
+  for (i = (ptrdiff_t)src->hmask; i >= 0; i--)
+    if (!tvisnil(&node[i].val)) {
+      o = &node[i].key;
+      // If the key is NOT an integer, it's a map
+      if (LJ_UNLIKELY(!tvisint(o))) {
+        if (tvisnum(o)) {
+          lua_Number n = numberVnum(o);
+          if (LJ_UNLIKELY(rint((double)n) != n) || n < 1 || n > (lua_Number)len) {
+            return 1;  // Non-number key, definitely a map
+          }
+          // Number key, we can't tell if it's a map yet
+        } else {
+          return 1; // Non-number key, definitely a map
+        }
+      }
+    }
+
+  return 1;
+}
+
+int LJ_FASTCALL lj_tab_ismap(const GCtab *src)
+{
+  Node *node;
+  cTValue *o;
+  ptrdiff_t i;
+
+  node = noderef(src->node);
+  for (i = (ptrdiff_t)src->hmask; i >= 0; i--)
+    if (!tvisnil(&node[i].val)) {
+      o = &node[i].key;
+      if (LJ_UNLIKELY(tvisint(o))) {
+        continue;
+      }
+      if (LJ_UNLIKELY(tvisnum(o))) {
+        lua_Number n = numberVnum(o);
+        if (LJ_LIKELY(rint((double) n) == n)) {
+          continue;
+        }
+      }
+      return 0;
+    }
+
+  return 1;
+}
+
+int LJ_FASTCALL lj_tab_isempty(const GCtab *t)
+{
+  MSize narr = (MSize)t->asize;
+  cTValue *e;
+  Node *node;
+  MSize i;
+
+  e = tvref(t->array);
+  for (i = 0; i < narr; i++)
+    if (LJ_LIKELY(!tvisnil(&e[i])))
+      return 0;
+
+  if (t->hmask <= 0)
+    return 1;
+
+  node = noderef(t->node);
+  for (i = 0; i <= (MSize)t->hmask; i++) {
+    Node *n = &node[i];
+    if (LJ_LIKELY(!tvisnil(&n->val))) {
+      return 0;
+    }
+  }
+
+  return 1;
+}
+
+MSize LJ_FASTCALL lj_tab_keycount(const GCtab *t)
+{
+  MSize narr = (MSize)t->asize;
+  cTValue *e;
+  Node *node;
+  MSize i, cnt = 0;
+
+  e = tvref(t->array);
+  for (i = 0; i < narr; i++)
+    if (LJ_LIKELY(!tvisnil(&e[i])))
+      cnt++;
+
+  if (t->hmask <= 0)
+    return cnt;
+
+  node = noderef(t->node);
+  for (i = 0; i <= (MSize)t->hmask; i++) {
+    Node *n = &node[i];
+    if (LJ_LIKELY(!tvisnil(&n->val))) {
+      cnt++;
+    }
+  }
+
+  return cnt;
+}
 #endif
 
