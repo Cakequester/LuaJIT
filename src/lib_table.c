@@ -199,7 +199,7 @@ LJLIB_NOREG LJLIB_CF(table_isempty) LJLIB_REC(.)
   return 1;
 }
 
-LJLIB_NOREG LJLIB_CF(table_length) LJLIB_REC(.)
+LJLIB_NOREG LJLIB_CF(table_nkeys) LJLIB_REC(.)
 {
   GCtab *src = lj_lib_checktab(L, 1);
 
@@ -356,8 +356,8 @@ static int luaopen_table_isempty(lua_State *L) {
   return lj_lib_postreg(L, lj_cf_table_isempty, FF_table_isempty, "isempty");
 }
 
-static int luaopen_table_length(lua_State *L) {
-  return lj_lib_postreg(L, lj_cf_table_length, FF_table_length, "length");
+static int luaopen_table_nkeys(lua_State *L) {
+  return lj_lib_postreg(L, luaopen_table_nkeys, FF_table_nkeys, "nkeys");
 }
 
 static int luaopen_table_clear(lua_State *L)
@@ -380,7 +380,7 @@ LUALIB_API int luaopen_table(lua_State *L)
   lj_lib_prereg(L, LUA_TABLIBNAME ".isarray", luaopen_table_isarray, tabV(L->top-1));
   lj_lib_prereg(L, LUA_TABLIBNAME ".ismap", luaopen_table_ismap, tabV(L->top-1));
   lj_lib_prereg(L, LUA_TABLIBNAME ".isempty", luaopen_table_isempty, tabV(L->top-1));
-  lj_lib_prereg(L, LUA_TABLIBNAME ".length", luaopen_table_length, tabV(L->top-1));
+  lj_lib_prereg(L, LUA_TABLIBNAME ".nkeys", luaopen_table_nkeys, tabV(L->top-1));
   lj_lib_prereg(L, LUA_TABLIBNAME ".clear", luaopen_table_clear, tabV(L->top-1));
   return 1;
 }

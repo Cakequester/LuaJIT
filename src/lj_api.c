@@ -208,14 +208,6 @@ static void copy_slot(lua_State *L, TValue *f, int idx)
   }
 }
 
-LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
-  TValue *fr;
-  lua_lock(L);
-  fr = index2addr(L, fromidx);
-  moveto(L, fr, toidx);
-  lua_unlock(L);
-}
-
 LUA_API void lua_replace(lua_State *L, int idx)
 {
   lj_checkapi_slot(1);

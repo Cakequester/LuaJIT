@@ -765,7 +765,7 @@ int LJ_FASTCALL lj_tab_isempty(const GCtab *t)
   return 1;
 }
 
-MSize LJ_FASTCALL lj_tab_keycount(const GCtab *t)
+MSize LJ_FASTCALL lj_tab_nkeys(const GCtab *t)
 {
   MSize narr = (MSize)t->asize;
   cTValue *e;
