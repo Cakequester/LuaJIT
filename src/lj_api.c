@@ -9,6 +9,8 @@
 #define lj_api_c
 #define LUA_CORE
 
+#include <limits.h>
+
 #include "lj_obj.h"
 #include "lj_gc.h"
 #include "lj_err.h"
@@ -27,6 +29,25 @@
 #include "lj_strfmt.h"
 
 /* -- Common helper functions --------------------------------------------- */
+
+#define ispseudo(i)		((i) <= LUA_REGISTRYINDEX)
+
+// TODO: Move these to something like Lua 5.2's llimits.h
+#define cast(t, exp)	((t)(exp))
+
+#define cast_void(i)	cast(void, (i))
+#define cast_voidp(i)	cast(void *, (i))
+#define cast_num(i)	cast(lua_Number, (i))
+#define cast_int(i)	cast(int, (i))
+#define cast_short(i)	cast(short, (i))
+#define cast_uint(i)	cast(unsigned int, (i))
+#define cast_byte(i)	cast(lu_byte, (i))
+#define cast_uchar(i)	cast(unsigned char, (i))
+#define cast_char(i)	cast(char, (i))
+#define cast_charp(i)	cast(char *, (i))
+#define cast_sizet(i)	cast(size_t, (i))
+#define cast_Integer(i)	cast(lua_Integer, (i))
+#define cast_Inst(i)	cast(Instruction, (i))
 
 #define lj_checkapi_slot(idx) \
   lj_checkapi((idx) <= (L->top - L->base), "stack slot %d out of range", (idx))

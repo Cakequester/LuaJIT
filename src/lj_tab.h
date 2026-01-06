@@ -93,6 +93,6 @@ LJ_FUNC MSize LJ_FASTCALL lj_tab_len_hint(GCtab *t, size_t hint);
 LJ_FUNCA int LJ_FASTCALL lj_tab_isarray(const GCtab* src);
 LJ_FUNCA int LJ_FASTCALL lj_tab_ismap(const GCtab* src);
 LJ_FUNCA int LJ_FASTCALL lj_tab_isempty(const GCtab* t);
-LJ_FUNCA MSize LJ_FASTCALL lj_tab_keycount(const GCtab* src);
+LJ_FUNCA MSize LJ_FASTCALL lj_tab_nkeys(const GCtab* src);
 
 #endif
